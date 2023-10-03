@@ -1,8 +1,66 @@
+import { useState } from "react";
 import pets from "../petsData";
 import PetItem from "./PetItem";
 
 function PetsList() {
-  const petList = pets.map((pet) => <PetItem pet={pet} key={pet.id} />);
+  //useState
+  const [query, setQuery] = useState("");
+  //filter
+  const petfilter = pets.filter((pet) => {
+    if (query == "") {
+      return true;
+    }
+    // console.log("query", query);
+    // console.log("pet.name", pet.name);
+
+    if (pet.name.toLowerCase().includes(query.toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  //my function to handle onChange
+
+  const myFun = (e) => {
+    setQuery(e.target.value); //all this is stored in variable query
+  };
+
+  //.map to reprint the new array
+  console.log(petfilter);
+  const targetPets = petfilter.map((pet) => {
+    return <PetItem pet={pet} key={pet.id} />;
+  });
+  console.log(targetPets);
+
+  //2nd task setType
+
+  //1st i set the usestate
+  const [type, setType] = useState("");
+
+  //2nd after seting the onchange method i build my type function
+  const selectmyType = (e) => {
+    setType(e.target.value);
+  };
+
+  //3rd set the type filter
+
+  const petTypefilter = pets.filter((pet) => {
+    if (type == "") {
+      return true;
+    }
+
+    if (pet.type.toLowerCase().includes(type.toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  //4th print the result in HTML pet item
+
+  const petTypeResult = petTypefilter.map((pet) => {
+    return <PetItem pet={pet} key={pet.type} />;
+  });
 
   return (
     <section id="doctors" className="doctor-section pt-140">
@@ -15,6 +73,7 @@ function PetsList() {
               </h1>
               <div className="input-group rounded">
                 <input
+                  onChange={myFun}
                   type="search"
                   className="form-control rounded"
                   placeholder="Search"
@@ -24,7 +83,7 @@ function PetsList() {
               </div>
               <br />
               Type:
-              <select className="form-select">
+              <select onChange={selectmyType} className="form-select">
                 <option value="" selected>
                   All
                 </option>
@@ -36,7 +95,7 @@ function PetsList() {
           </div>
         </div>
 
-        <div className="row justify-content-center">{petList}</div>
+        <div className="row justify-content-center">{targetPets}</div>
       </div>
     </section>
   );
